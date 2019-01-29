@@ -22,10 +22,9 @@ Class priceva_connector extends CModule
     var $MODULE_DESCRIPTION  = '';
 
     /**
-     * @var $app     \Bitrix\Main\Application|bool
-     * @var $helpers \Priceva\Connector\Bitrix\Helpers\CommonHelpers
+     * @var $common_helpers \Priceva\Connector\Bitrix\Helpers\CommonHelpers
      */
-    private $helpers;
+    private $common_helpers;
 
     /**
      * @var bool
@@ -40,9 +39,9 @@ Class priceva_connector extends CModule
 
     function __construct()
     {
-        $this->helpers = self::autoload_helpers();
+        $this->common_helpers = self::autoload_helpers();
 
-        $this->MODULE_ID = $this->helpers::MODULE_ID;
+        $this->MODULE_ID = $this->common_helpers::MODULE_ID;
 
         $arModuleVersion = [];
 
@@ -79,7 +78,7 @@ Class priceva_connector extends CModule
 
         if( self::isVersionD7() ){
 
-            if( IsModuleInstalled($this->helpers::MODULE_ID) ){
+            if( IsModuleInstalled($this->common_helpers::MODULE_ID) ){
                 $APPLICATION->ThrowException(Loc::getMessage("PRICEVA_BC_INSTALL_INSTALL"));
             }
 
@@ -104,9 +103,9 @@ Class priceva_connector extends CModule
                     self::GetPatch() . "/install/errors.php"
                 );
             }else{
-                ModuleManager::registerModule($this->helpers::MODULE_ID);
+                ModuleManager::registerModule($this->common_helpers::MODULE_ID);
 
-                COption::SetOptionString($this->helpers::MODULE_ID, 'ID_TYPE_PRICE', $id_type_price);
+                COption::SetOptionString($this->common_helpers::MODULE_ID, 'ID_TYPE_PRICE', $id_type_price);
 
                 $APPLICATION->IncludeAdminFile(
                     Loc::getMessage("PRICEVA_BC_INSTALL_TITLE_1"),
@@ -143,7 +142,7 @@ Class priceva_connector extends CModule
                 self::GetPatch() . "/install/errors.php"
             );
         }else{
-            ModuleManager::unRegisterModule($this->helpers::MODULE_ID);
+            ModuleManager::unRegisterModule($this->common_helpers::MODULE_ID);
 
             $APPLICATION->IncludeAdminFile(
                 Loc::getMessage("PRICEVA_BC_INSTALL_TITLE_1"),
@@ -179,11 +178,11 @@ Class priceva_connector extends CModule
     {
         parent::InstallFiles();
 
-        $r1 = CopyDirFiles(self::GetPatch() . "/lib/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->helpers::MODULE_ID . "/lib", true, true);
-        $r2 = CopyDirFiles(self::GetPatch() . "/admin/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->helpers::MODULE_ID . "/admin", true, true);
-        $r3 = CopyDirFiles(self::GetPatch() . "/include.php", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->helpers::MODULE_ID . "/include.php", true, true);
+        $r1 = CopyDirFiles(self::GetPatch() . "/lib/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->common_helpers::MODULE_ID . "/lib", true, true);
+        $r2 = CopyDirFiles(self::GetPatch() . "/admin/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->common_helpers::MODULE_ID . "/admin", true, true);
+        $r3 = CopyDirFiles(self::GetPatch() . "/include.php", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->common_helpers::MODULE_ID . "/include.php", true, true);
         $r4 = CopyDirFiles(self::GetPatch() . "/install/admin/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/admin/", true, true);
-        $r5 = CopyDirFiles(self::GetPatch() . "/install/module/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->helpers::MODULE_ID, true, true);
+        $r5 = CopyDirFiles(self::GetPatch() . "/install/module/", $_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->common_helpers::MODULE_ID, true, true);
 
         $this->save_unroll($r1 && $r2 && $r3 && $r4 && $r5, "UnInstallFiles");
     }
@@ -192,7 +191,7 @@ Class priceva_connector extends CModule
     {
         parent::UnInstallFiles();
 
-        Bitrix\Main\IO\Directory::deleteDirectory($_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->helpers::MODULE_ID);
+        Bitrix\Main\IO\Directory::deleteDirectory($_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/modules/" . $this->common_helpers::MODULE_ID);
         Bitrix\Main\IO\Directory::deleteDirectory($_SERVER[ "DOCUMENT_ROOT" ] . "/bitrix/admin/priceva_bc.php");
 
         $this->save_unroll(true, "InstallFiles");
@@ -202,7 +201,7 @@ Class priceva_connector extends CModule
     {
         parent::InstallEvents();
 
-        EventManager::getInstance()->registerEventHandler('main', 'OnBuildGlobalMenu', $this->helpers::MODULE_ID, 'priceva_bitrix_connector', 'AddGlobalMenuItem');
+        EventManager::getInstance()->registerEventHandler('main', 'OnBuildGlobalMenu', $this->common_helpers::MODULE_ID, 'priceva_connector', 'AddGlobalMenuItem');
 
         $this->save_unroll(true, "UnInstallEvents");
     }
@@ -225,7 +224,7 @@ Class priceva_connector extends CModule
     {
         parent::UnInstallEvents();
 
-        EventManager::getInstance()->unRegisterEventHandler('main', 'OnBuildGlobalMenu', $this->helpers::MODULE_ID, 'priceva_bitrix_connector', 'AddGlobalMenuItem');
+        EventManager::getInstance()->unRegisterEventHandler('main', 'OnBuildGlobalMenu', $this->common_helpers::MODULE_ID, 'priceva_bitrix_connector', 'AddGlobalMenuItem');
 
         $this->save_unroll(true, "InstallEvents");
     }
@@ -289,7 +288,7 @@ Class priceva_connector extends CModule
     private function check_price_type()
     {
         try{
-            $dbPriceType = \CCatalogGroup::GetList([], [ "NAME" => $this->helpers::NAME_PRICE_TYPE ]);
+            $dbPriceType = \CCatalogGroup::GetList([], [ "NAME" => $this->common_helpers::NAME_PRICE_TYPE ]);
             while( $arPriceType = $dbPriceType->Fetch() ){
                 return true;
             }
@@ -311,7 +310,7 @@ Class priceva_connector extends CModule
                 throw new \Bitrix\Main\LoaderException(Loc::getMessage("PRICEVA_BC_INSTALL_ERROR_MODULE_CATALOG_NOT_INSTALLED"));
             }
 
-            $type_price_ID = $this->helpers::get_type_price_ID();
+            $type_price_ID = $this->common_helpers::get_type_price_ID();
 
             $APPLICATION->ResetException();
 
@@ -338,18 +337,18 @@ Class priceva_connector extends CModule
             \Bitrix\Main\Loader::includeModule('catalog');
 
             if( self::check_price_type() ){
-                throw new \Bitrix\Main\SystemException("Тип цен " . $this->helpers::NAME_PRICE_TYPE . " уже создан.");
+                throw new \Bitrix\Main\SystemException("Тип цен " . $this->common_helpers::NAME_PRICE_TYPE . " уже создан.");
             }
             $arFields = [
-                "NAME"           => $this->helpers::NAME_PRICE_TYPE,
+                "NAME"           => $this->common_helpers::NAME_PRICE_TYPE,
                 "BASE"           => "N",
                 "SORT"           => 100,
                 "USER_GROUP"     => [ 1 ],   // видят Администраторы
                 "USER_GROUP_BUY" => [ 1 ],  // покупают по этой цене Администраторы
                 // только члены группы 2
                 "USER_LANG"      => [
-                    "ru" => $this->helpers::NAME_PRICE_TYPE,
-                    "en" => $this->helpers::NAME_PRICE_TYPE,
+                    "ru" => $this->common_helpers::NAME_PRICE_TYPE,
+                    "en" => $this->common_helpers::NAME_PRICE_TYPE,
                 ],
             ];
 
