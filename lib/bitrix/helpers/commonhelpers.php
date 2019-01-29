@@ -102,6 +102,16 @@ class CommonHelpers
     }
 
     /**
+     * @param string $name
+     *
+     * @return string|null
+     */
+    public function get_post_param( $name )
+    {
+        return $this->app->getContext()->getRequest()->getPost($name);
+    }
+
+    /**
      * @return bool|string|null
      */
     public static function get_type_price_ID()
