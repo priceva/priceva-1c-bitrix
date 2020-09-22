@@ -28,6 +28,9 @@ use Priceva\PricevaException;
 use stdClass;
 use Throwable;
 
+// todo вызов лингвистического файла
+// Loc::loadMessages(FILE);
+
 class PricevaConnector
 {
     private $info = [

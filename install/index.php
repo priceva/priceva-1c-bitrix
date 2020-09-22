@@ -508,6 +508,7 @@ Class priceva_connector extends CModule
     }
 
     /**
+     * todo Проверять, что агент еще не создан, и только тогда выдавать ошибку
      * @return int|bool
      */
     private function InstallAgents()
