@@ -12,3 +12,5 @@ $MESS[ "PRICEVA_BC_INFO_TEXT10" ]                                = "задвое
 $MESS[ "PRICEVA_BC_INFO_TEXT11" ]                                = "пустой символьный код в товаре / торговом предложении из Bitrix";
 $MESS[ "PRICEVA_BC_MANUAL" ]                                     = "Ручное управление";
 $MESS[ "PRICEVA_BC_INSTALL_ERROR_MODULE_CATALOG_NOT_INSTALLED" ] = "Модуль catalog не установлен. Работа модуля PRICEVA невозможна";
+$MESS[ "PRICEVA_BC_ERROR_MESSAGE" ]                                     = "текст ошибки";
+$MESS[ "PRICEVA_BC_ERROR_MESSAGE_ZERO" ]                                     = "нет ошибок";

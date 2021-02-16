@@ -28,7 +28,7 @@ use Priceva\PricevaException;
 use stdClass;
 use Throwable;
 
-// вызов лингвистического файла
+// todo вызов лингвистического файла
 Loc::loadMessages(__FILE__);
 
 class PricevaConnector
@@ -135,17 +135,23 @@ class PricevaConnector
             }
 
             $api_key          = Options::api_key();
+			
             $sync_only_active = Options::sync_only_active();
-
+			
             $this->sync($api_key, $sync_only_active);
+			
         }catch( PricevaModuleException $e ){
             ++$this->info[ 'module_errors' ];
+			$this->info['errors_messages'] = $e->getMessage();
             CommonHelpers::write_to_log($e);
         }catch( PricevaException $e ){
             ++$this->info[ 'priceva_errors' ];
-            CommonHelpers::write_to_log($e);
+			
+			$this->info['errors_messages'] = $e->getMessage();
+			CommonHelpers::write_to_log($e);
         }catch( Throwable $e ){
             ++$this->info[ 'module_errors' ];
+			$this->info['errors_messages'] = $e->getMessage();
             CommonHelpers::write_to_log($e);
         }
     }
@@ -164,7 +170,7 @@ class PricevaConnector
         $currency         = Options::currency();
         $sync_field       = Options::sync_field();
         $sync_dominance   = Options::sync_dominance();
-
+		
         switch( $sync_dominance ){
             case "priceva":
                 {
@@ -179,12 +185,15 @@ class PricevaConnector
             default:
                 throw new Exception("Wrong sync dominance type in module " . CommonHelpers::MODULE_ID);
         }
-
+		
         $info     = $this->get_last_info_msg();
+		
         $info_str =
             "Errors: " . implode(', ', $info[ 'errors' ]) . "; " .
+			"ErrorsMessages: " . implode(', ', $info[ 'errors_messages' ]) . "; " .
             "Warnings: " . implode(', ', $info[ 'warnings' ]) . "; " .
             "Success: " . implode(', ', $info[ 'success' ]) . ".";
+			
 
         CommonHelpers::write_to_log($info_str, 'PRICEVA_SYNC');
     }
@@ -538,6 +547,7 @@ class PricevaConnector
                 Loc::getMessage("PRICEVA_BC_INFO_TEXT10") . ": {$this->info['product_duplicate']}",
                 Loc::getMessage("PRICEVA_BC_INFO_TEXT9") . ": {$this->info['priceva_errors']}",
                 Loc::getMessage("PRICEVA_BC_INFO_TEXT8") . ": {$this->info['module_errors']}",
+				Loc::getMessage("PRICEVA_BC_ERROR_MESSAGE") . ": " .  ($this->info['errors_messages']!=""?"<span style='font-weight:bold;color:#ff0000;'>". " {$this->info['errors_messages']}" . "</span>": Loc::getMessage("PRICEVA_BC_ERROR_MESSAGE_ZERO")),
             ],
             "warnings" => [
                 Loc::getMessage("PRICEVA_BC_INFO_TEXT1") . ": {$this->info['product_not_found_priceva']}",

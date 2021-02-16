@@ -27,8 +27,8 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
             [
                 $filters,
                 'VALUES' => [
-                    'page'  => 1,
-                    'limit' => 2,
+                    'page'        => 1,
+                    'limit'       => 2,
                 ],
             ],
             [
@@ -54,8 +54,8 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
         $sources        = new Sources();
         $product_fields = new ProductFields();
 
-        $filters[ 'page' ]  = 1;
-        $filters[ 'limit' ] = 2;
+        $filters[ 'page' ]        = 1;
+        $filters[ 'limit' ]       = 2;
 
         $sources [ 'add' ]      = true;
         $sources [ 'add_term' ] = true;
@@ -67,8 +67,8 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
             [
                 $filters,
                 'VALUES' => [
-                    'page'  => 1,
-                    'limit' => 2,
+                    'page'        => 1,
+                    'limit'       => 2,
                 ],
             ],
             [
@@ -177,11 +177,10 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider                   fullyParams
+     * @dataProvider             fullyParams
      *
      * @expectedException \Priceva\PricevaException
-     * @expectedExceptionMessageRegExp /(You can use only valid parameter names)|(You can use only valid options in
-     *                                 flat parameter)/u
+     * @expectedExceptionMessageRegExp /(You can use only valid parameter names)|(You can use only valid options in flat parameter)/u
      *
      * @param Params $params
      *
