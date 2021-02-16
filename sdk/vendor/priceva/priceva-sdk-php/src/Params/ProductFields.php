@@ -18,7 +18,7 @@ use Priceva\Contracts\Params;
  */
 class ProductFields extends Params
 {
-    protected $flat             = true;
+    protected $flat = true;
     protected $valid_parameters = [
         'client_code',
         'articul',

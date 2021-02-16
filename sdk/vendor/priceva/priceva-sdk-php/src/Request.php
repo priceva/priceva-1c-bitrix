@@ -28,7 +28,7 @@ class Request
      *
      * @param $api_params
      */
-    public function __construct( $api_params )
+    public function __construct ( $api_params )
     {
         $this->api_params = $api_params;
     }
@@ -38,7 +38,7 @@ class Request
      *
      * @return string
      */
-    private function get_url( $action )
+    private function get_url ( $action )
     {
         return sprintf(self::URL_API_V1, $this->api_params[ 'version' ]) . $action;
     }
@@ -50,7 +50,7 @@ class Request
      * @return Result
      * @throws PricevaException
      */
-    public function start( $request_params = [] )
+    public function start ( $request_params = [] )
     {
         $ch = curl_init();
 
@@ -67,18 +67,20 @@ class Request
 
         $response = curl_exec($ch);
 
-        if( $response ){
-            $response = json_decode($response);
+        if ( $response ) {
+            $response_result = json_decode($response);
             curl_close($ch);
 
-            $json_last_error = json_last_error();
-
-            if( $json_last_error ){
-                throw new PricevaException('Server answer cannot be decoded. Error code: ' . $json_last_error, 500);
-            }else{
-                return new Result($response);
+            if ( $json_last_error = json_last_error() ) {
+                throw new PricevaException(
+                    'Server answer cannot be decoded. ' .
+                    'JSON error code: ' . $json_last_error . ' ' .
+                    'Part of API response: ' . substr($response, 0, 256),
+                    500);
+            } else {
+                return new Result($response_result);
             }
-        }else{
+        } else {
             $curl_error = curl_error($ch);
             curl_close($ch);
             throw new PricevaException('cURL error: ' . $curl_error, 500);

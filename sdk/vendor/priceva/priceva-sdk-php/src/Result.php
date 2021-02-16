@@ -46,18 +46,18 @@ class Result
      *
      * @param $curl_response
      */
-    public function __construct( $curl_response )
+    public function __construct ( $curl_response )
     {
         $this->curl_response = $curl_response;
 
-        if( isset($curl_response->errors_cnt) && $curl_response->errors_cnt > 0 ){
+        if ( isset($curl_response->errors_cnt) && $curl_response->errors_cnt > 0 ) {
             $this->error = true;
 
             $this->errors     = $curl_response->errors;
             $this->errors_cnt = $curl_response->errors_cnt;
 
             $this->set_info($curl_response);
-        }else{
+        } else {
             $this->error = false;
 
             $this->result = $curl_response->result;
@@ -69,7 +69,7 @@ class Result
     /**
      * @param \stdClass $curl_response
      */
-    private function set_info( $curl_response )
+    private function set_info ( $curl_response )
     {
         $this->timestamp          = $curl_response->timestamp;
         $this->date               = $curl_response->date;
@@ -79,7 +79,7 @@ class Result
     /**
      * @return bool
      */
-    public function error()
+    public function error ()
     {
         return $this->error;
     }
@@ -87,11 +87,11 @@ class Result
     /**
      * @return array|bool
      */
-    public function get_errors()
+    public function get_errors ()
     {
-        if( $this->error ){
+        if ( $this->error ) {
             return $this->errors;
-        }else{
+        } else {
             return false;
         }
     }
@@ -99,7 +99,7 @@ class Result
     /**
      * @return array
      */
-    public function get_info()
+    public function get_info ()
     {
         return [
             'timestamp'          => $this->timestamp,
@@ -112,25 +112,40 @@ class Result
      * @return \stdClass
      * @throws PricevaException
      */
-    public function get_raw()
+    public function get_raw ()
     {
-        if( $this->error ){
-            throw new PricevaException(null, 400);
-        }else{
-            return $this->curl_response;
+        if ( $this->error ) {
+            $this->throw_error();
         }
+
+        return $this->curl_response;
     }
 
     /**
      * @return mixed
      * @throws PricevaException
      */
-    public function get_result()
+    public function get_result ()
     {
-        if( $this->error ){
+        if ( $this->error ) {
+            $this->throw_error();
+        }
+
+        return $this->result;
+    }
+
+    /**
+     * @throws PricevaException
+     */
+    protected function throw_error ()
+    {
+        if (
+            !empty($this->errors) &&
+            ( $error = ( is_array($this->errors) ? $this->errors[ 0 ] : $this->errors ) )
+        ) {
+            throw new PricevaException($error->message, $error->code);
+        } else {
             throw new PricevaException(null, 400);
-        }else{
-            return $this->result;
         }
     }
 }

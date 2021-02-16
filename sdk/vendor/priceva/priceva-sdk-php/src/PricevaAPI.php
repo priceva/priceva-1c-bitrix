@@ -55,7 +55,7 @@ class PricevaAPI
      * @param string $api_version
      * @param string $request_method
      */
-    public function __construct( $api_key, $api_version = '1', $request_method = Request::METHOD_POST )
+    public function __construct ( $api_key, $api_version = '1', $request_method = Request::METHOD_POST )
     {
         $this->api_key        = $api_key;
         $this->api_version    = $api_version;
@@ -71,7 +71,7 @@ class PricevaAPI
      *
      * @throws PricevaException
      */
-    public function set_filters( $filters )
+    public function set_filters ( $filters )
     {
         $this->filters->merge($filters);
     }
@@ -81,7 +81,7 @@ class PricevaAPI
      *
      * @throws PricevaException
      */
-    public function set_sources( $sources )
+    public function set_sources ( $sources )
     {
         $this->sources->merge($sources);
     }
@@ -91,7 +91,7 @@ class PricevaAPI
      *
      * @throws PricevaException
      */
-    public function set_product_fields( $product_fields )
+    public function set_product_fields ( $product_fields )
     {
         $this->product_fields->merge($product_fields);
     }
@@ -99,7 +99,7 @@ class PricevaAPI
     /**
      * @return Filters
      */
-    public function get_filters()
+    public function get_filters ()
     {
         return $this->filters;
     }
@@ -107,7 +107,7 @@ class PricevaAPI
     /**
      * @return Sources
      */
-    public function get_sources()
+    public function get_sources ()
     {
         return $this->sources;
     }
@@ -116,37 +116,37 @@ class PricevaAPI
     /**
      * @return ProductFields
      */
-    public function get_product_fields()
+    public function get_product_fields ()
     {
         return $this->product_fields;
     }
 
     /**
-     * @return Result;
+     * @return Result
      * @throws PricevaException
      */
-    public function main_ping()
+    public function main_ping ()
     {
         $request = new Request([
-            'key'     => $this->api_key,
-            'version' => $this->api_version,
-            'action'  => self::ACTION_MAIN_PING,
-        ]);
+                                   'key'     => $this->api_key,
+                                   'version' => $this->api_version,
+                                   'action'  => self::ACTION_MAIN_PING,
+                               ]);
 
         return $request->start();
     }
 
     /**
-     * @return Result;
+     * @return Result
      * @throws PricevaException
      */
-    public function main_demo()
+    public function main_demo ()
     {
         $request = new Request([
-            'key'     => $this->api_key,
-            'version' => $this->api_version,
-            'action'  => self::ACTION_MAIN_DEMO,
-        ]);
+                                   'key'     => $this->api_key,
+                                   'version' => $this->api_version,
+                                   'action'  => self::ACTION_MAIN_DEMO,
+                               ]);
 
         return $request->start();
     }
@@ -155,16 +155,16 @@ class PricevaAPI
      * @param array|Filters $filters
      * @param array|Sources $sources
      *
-     * @return Result;
+     * @return Result
      * @throws PricevaException
      */
-    public function product_list( $filters = [], $sources = [] )
+    public function product_list ( $filters = [], $sources = [] )
     {
         $request = new Request([
-            'key'     => $this->api_key,
-            'version' => $this->api_version,
-            'action'  => self::ACTION_PRODUCT_LIST,
-        ]);
+                                   'key'     => $this->api_key,
+                                   'version' => $this->api_version,
+                                   'action'  => self::ACTION_PRODUCT_LIST,
+                               ]);
 
         $this->set_filters($filters);
         $this->set_sources($sources);
@@ -184,16 +184,16 @@ class PricevaAPI
      * @param array|Filters       $filters
      * @param array|ProductFields $product_fields
      *
-     * @return Result;
+     * @return Result
      * @throws PricevaException
      */
-    public function report_list( $filters = [], $product_fields = [] )
+    public function report_list ( $filters = [], $product_fields = [] )
     {
         $request = new Request([
-            'key'     => $this->api_key,
-            'version' => $this->api_version,
-            'action'  => self::ACTION_REPORT_LIST,
-        ]);
+                                   'key'     => $this->api_key,
+                                   'version' => $this->api_version,
+                                   'action'  => self::ACTION_REPORT_LIST,
+                               ]);
 
         $this->set_filters($filters);
         $this->set_product_fields($product_fields);
