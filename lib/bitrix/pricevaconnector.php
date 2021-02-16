@@ -28,7 +28,7 @@ use Priceva\PricevaException;
 use stdClass;
 use Throwable;
 
-// todo вызов лингвистического файла
+// вызов лингвистического файла
 Loc::loadMessages(__FILE__);
 
 class PricevaConnector
